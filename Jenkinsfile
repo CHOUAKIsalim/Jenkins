@@ -27,7 +27,7 @@ pipeline {
         stage('Code Analysis') {
           steps {
             withSonarQubeEnv('sonarqube') {
-              sh 'C:\sonarqube-7.3 '
+              sh 'C:/sonarqube-7.3 '
             }
 
             waitForQualityGate true
