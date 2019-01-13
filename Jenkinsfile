@@ -9,23 +9,25 @@ pipeline {
         archiveArtifacts 'build/libs/*.jar'
         archiveArtifacts 'build/docs/javadoc/'
       }
-        post {
-          failure {
-            mail(subject: 'Jinkens Test Failed', body: 'Mail Notification of the  Integration JAVA API with Jenkins', bcc: 'fm_bouteminel@esi.dz ', cc: 'fm_boutemine@esi.dz')
-                  }
-            }
+      post {
+        failure {
+          mail(subject: 'Jinkens Test Failed', body: 'Mail Notification of the  Integration JAVA API with Jenkins', bcc: 'fs_chouaki@esi.dz ', cc: 'fs_chouaki@esi.dz')
+        }
       }
-      stage('Mail Notification') {
+    }
+
+    stage('Mail Notification') {
       steps {
-         mail(subject: 'Jinkens Test Successful', body: 'Mail Notification of the  Integration JAVA API with Jenkins', bcc: 'fs_chouaki@esi.dz ', cc: 'fs_chouaki@esi.dz')
-            }
+         mail(subject: 'Jinkens Test Successful', body: 'Mail Notification of the  Integration JAVA API with Jenkins', bcc: 'fs_chouaki@esi.dz', cc: 'fs_chouaki@esi.dz')
       }
-      stage('Code Analysis') {
-        parallel {
-          stage('Code Analysis') {
-            steps {
-              withSonarQubeEnv('sonarqube') {
-                sh 'C:\sonarqube-7.3'
+    }
+    
+    stage('Code Analysis') {
+      parallel {
+        stage('Code Analysis') {
+          steps {
+            withSonarQubeEnv('sonarqube') {
+              sh '/home/asta/Servers/sonar-scanner-cli-3.3.0.1492-linux/sonar-scanner-3.3.0.1492-linux/bin/sonar-scanner '
             }
 
             waitForQualityGate true
@@ -38,5 +40,18 @@ pipeline {
         }
       }
     }
+    stage('Deployment') {
+      when { not { changeRequest target:'master' }}
+      steps {
+        sh 'gradle uploadArchives'
+      }
+    }
+    stage('Slack Notification') {
+      when { not { changeRequest target:'master' }}
+      steps {
+        slackSend(message: 'Testing Jenkins')
+      }
+    }
   }
 }
+
