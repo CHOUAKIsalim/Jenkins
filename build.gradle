@@ -1,82 +1,13 @@
 plugins {
- 
+    id 'java'
+    id "jacoco"
+    id "com.liferay.app.javadoc.builder" version "1.2.2"
+    id 'maven-publish'
 }
 
+group 'Jenkins'
+version '1.0-SNAPSHOT'
 
-group 'matrix'
-
-
-
-apply plugin: 'java'
-apply plugin: 'jacoco'
-
-pitest {
-    targetClasses = ['com.example.*']
-}
-
-jacocoTestReport {
-    reports {
-        xml.enabled false
-        csv.enabled false
-        html.destination file("build/jacocoHtml")
-    }
-}
-jacocoTestCoverageVerification {
-
-    violationRules {
-        rule {
-            limit {
-                minimum = 0.8
-            }
-        }
-    }
-}
-
-test.finalizedBy "pitest", "jacocoTestReport", "jacocoTestCoverageVerification"
-
-task generateMatrixAPI(type:Copy) {
-    from('build/reports/tests/test') {
-        into 'TestReports'
-    }
-    from('build/reports/pitest') {
-        into 'TestQualityReports/pitest'
-    }
-    from('build/reports/pitest') {
-        into 'TestQualityReports/pitest'
-    }
-    from('build/jacocoHtml') {
-        into 'TestQualityReports/coverage'
-    }
-    from('build/docs/javadoc') {
-        into 'Documentation'
-    }
-    from('build/libs') {
-        into 'API'
-    }
-    into "../MatrixRelease/Matrix${version}"
-}
-
-generateMatrixAPI.dependsOn "build"
-
-uploadArchives {
-    repositories {
-        maven {
-            credentials {
-                username "myMavenRepo"
-                password "test"
-            }
-            url "https://mymavenrepo.com/repo/bXuDmaIlZ03gOsnSAGyl/"
-        }
-    }
-}
-
-slack {
-    webhookUrl "https://hooks.slack.com/services/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"
-    username "Gradle"
-    shouldMonitor "uploadArchives"
-}
-
-uploadArchives.dependsOn "generateMatrixAPI"
 sourceCompatibility = 1.8
 
 repositories {
@@ -86,3 +17,20 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
+
+
+
+uploadArchives {
+    repositories {
+        maven {
+            credentials {
+                username "myMavenRepo"
+                password "1234"
+            }
+            url "https://mymavenrepo.com/repo/Dqum36mSD3DXkNwLhu8h/"
+        }
+    }
+}
+
+
+
