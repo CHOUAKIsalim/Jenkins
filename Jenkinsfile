@@ -17,11 +17,6 @@ pipeline {
         archiveArtifacts 'build/docs/javadoc/'
       }
     }
-    stage('Mail Notification') {
-      steps {
-        mail(subject: 'Jinkens Test Successful', body: 'Mail Notification of the  Integration JAVA API with Jenkins', bcc: 'fs_chouaki@esi.dz', cc: 'fs_chouaki@esi.dz', to: 'fs_chouaki@esi.dz')
-      }
-    }
     stage('Code Analysis') {
       parallel {
         stage('Code Analysis') {
