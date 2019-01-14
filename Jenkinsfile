@@ -43,7 +43,7 @@ pipeline {
 
       }
       steps {
-        sh 'gradle uploadArchives'
+        bat 'gradle uploadArchives'
       }
     }
     stage('Slack Notification') {
@@ -54,7 +54,7 @@ pipeline {
 
       }
       steps {
-        slackSend(message: 'Testing Jenkins')
+        slackSend(message: '"Testing Jenkins"')
       }
     }
   }
