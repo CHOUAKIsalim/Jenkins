@@ -49,7 +49,7 @@ public class Matrix {
 	public double getValueAt(int row, int col) {
 		return data[row][col];
 	}
-
+//Test push
 	public boolean isSquare() {
 		return nrows == ncols;
 	}
